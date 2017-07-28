@@ -42,7 +42,8 @@ exports.handler = (event, context, callback) => {
       .then((data) => {
         key = data.Body.toString();
         perform(callback);
-      });
+      })
+      .catch(callback);
   } else {
     perform(callback);
   }

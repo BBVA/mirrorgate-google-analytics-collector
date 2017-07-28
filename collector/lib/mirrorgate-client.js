@@ -28,7 +28,6 @@ module.exports = {
             if (err) {
               return reject(err);
             }
-            console.log(MIRRORGATE_ENDPOINT)
             resolve(JSON.parse(body));
           });
     });
@@ -50,7 +49,6 @@ module.exports = {
             if (err) {
               return reject(err);
             }
-            console.log(body);
             resolve(JSON.parse(body));
           });
     });
