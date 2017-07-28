@@ -21,8 +21,8 @@ const main = require('./lib/process');
 let AWS = require('aws-sdk');
 let s3 = new AWS.S3();
 
-const BUCKET = 'mirrorgate-secrets' || process.env.S3_BUCKET_NAME;
-const BUCKET_KEY = 'google-analytics.pem' || process.env.S3_BUCKET_KEY;
+const BUCKET = process.env.S3_BUCKET_NAME || 'mirrorgate-secrets';
+const BUCKET_KEY = process.env.S3_BUCKET_KEY || 'google-analytics.pem';
 
 let key;
 
