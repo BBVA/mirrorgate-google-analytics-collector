@@ -26,7 +26,7 @@ const BUCKET_KEY = process.env.S3_BUCKET_KEY || 'google-analytics.pem';
 
 let key;
 
-function perform() {
+function perform(callback) {
         main({pemKey:key}).then((log) => {
             callback(null, log);
           }).catch(callback);
@@ -41,10 +41,10 @@ exports.handler = (event, context, callback) => {
       .promise()
       .then((data) => {
         key = data.Body.toString();
-        perform();
+        perform(callback);
       });
   } else {
-    perform();
+    perform(callback);
   }
 
 };
