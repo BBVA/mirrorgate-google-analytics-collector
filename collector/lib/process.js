@@ -44,7 +44,8 @@ module.exports = function(config) {
               {
                 auth: authClient,
                 'ids': id,
-                'metrics': 'rt:activeUsers'
+                'metrics': 'rt:activeUsers',
+                'metrics': 'ga:7dayUsers'
               },
               function(err, result) {
                 pending--;
@@ -53,7 +54,8 @@ module.exports = function(config) {
                 } else {
                   metrics.push({
                     viewId: id,
-                    rtActiveUsers: parseInt(result.totalsForAllResults['rt:activeUsers'])
+                    rtActiveUsers: parseInt(result.totalsForAllResults['rt:activeUsers']),
+                    weekAvgActiveUsers: parseInt(result.totalsForAllResults['ga:7dayUsers'])
                   });
                 }
                 if(pending <= 0) {
