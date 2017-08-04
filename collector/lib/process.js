@@ -64,7 +64,7 @@ module.exports = function(config) {
               {
                 auth: authClient,
                 'ids': id,
-                'start-date': '7daysAgo',
+                'start-date': 'today',
                 'end-date': 'today',
                 'metrics': 'ga:7dayUsers',
                 'dimensions': 'ga:date'
