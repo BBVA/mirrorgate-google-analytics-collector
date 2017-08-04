@@ -60,6 +60,28 @@ module.exports = function(config) {
                   mg.saveMetrics(metrics).then(resolve).catch(reject);
                 }
               });
+          analytics.data.ga.get(
+              {
+                auth: authClient,
+                'ids': id,
+                'start-date': '7daysAgo',
+                'end-date': 'today',
+                'metrics': 'ga:7dayUsers',
+                'dimensions': 'ga:date'
+              },
+              function(err, result) {
+                pending--;
+                if (err) {
+                  console.log(err);
+                } else {
+                  metrics.push({
+                    weekAvgActiveUsers: parseInt(result.totalsForAllResults['ga:7dayUsers'])
+                  });
+                }
+                if(pending <= 0) {
+                  mg.saveMetrics(metrics).then(resolve).catch(reject);
+                }
+              });
         });
       }).catch(reject);
     });
