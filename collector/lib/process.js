@@ -48,44 +48,42 @@ module.exports = function(config) {
               },
               function(err, result) {
                 pending--;
+                
+                var rtActiveUsers;
+                
                 if (err) {
                   console.log(err);
                 } else {
-                  metrics.push({
-                    viewId: id,
-                    rtActiveUsers: parseInt(result.totalsForAllResults['rt:activeUsers'])
+                  rtActiveUsers = parseInt(result.totalsForAllResults['rt:activeUsers'])
+                }
+                analytics.data.ga.get(
+                  {
+                    auth: authClient,
+                    'ids': id,
+                    'start-date': 'today',
+                    'end-date': 'today',
+                    'metrics': 'ga:7dayUsers',
+                    'dimensions': 'ga:date'
+                  },
+                  function(err, result) {
+
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      metrics.push({
+                        viewId: id,
+                        rtActiveUsers: rtActiveUsers,
+                        weekUsersCount: parseInt(result.totalsForAllResults['ga:7dayUsers'])
+                      });
+                    }
+                    if(pending <= 0) {
+                      mg.saveMetrics(metrics).then(resolve).catch(reject);
+                    }
                   });
-                }
-                if(pending <= 0) {
-                  mg.saveMetrics(metrics).then(resolve).catch(reject);
-                }
-              });
-          analytics.data.ga.get(
-              {
-                auth: authClient,
-                'ids': id,
-                'start-date': 'today',
-                'end-date': 'today',
-                'metrics': 'ga:7dayUsers',
-                'dimensions': 'ga:date'
-              },
-              function(err, result) {
-                pending--;
-                if (err) {
-                  console.log(err);
-                } else {
-                  metrics.push({
-                    weekAvgActiveUsers: parseInt(result.totalsForAllResults['ga:7dayUsers'])
-                  });
-                }
-                if(pending <= 0) {
-                  mg.saveMetrics(metrics).then(resolve).catch(reject);
-                }
               });
         });
       }).catch(reject);
     });
-
 
   });
 
