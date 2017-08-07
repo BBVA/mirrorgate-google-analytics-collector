@@ -73,7 +73,7 @@ module.exports = function(config) {
                       metrics.push({
                         viewId: id,
                         rtActiveUsers: rtActiveUsers,
-                        weekUsersCount: parseInt(result.totalsForAllResults['ga:7dayUsers'])
+                        ga7dayUsers: parseInt(result.totalsForAllResults['ga:7dayUsers'])
                       });
                     }
                     if(pending <= 0) {
@@ -84,7 +84,5 @@ module.exports = function(config) {
         });
       }).catch(reject);
     });
-
   });
-
 };
