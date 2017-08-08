@@ -50,7 +50,7 @@ module.exports = function(config) {
                 'metrics': 'rt:activeUsers'
               },
               function(err, result) {
-                pending--;                      
+                pending--;
                 if (err) {
                   console.log(err);
                 } else {
