@@ -40,6 +40,9 @@ module.exports = function(config) {
       mg.getListOfGoogleAnaliticsIds().then((ids) => {
         let pending = ids.length;
         ids.forEach((id) => {
+          let data = {
+            viewId: id
+          };
           analytics.data.realtime.get(
               {
                 auth: authClient,
@@ -47,14 +50,11 @@ module.exports = function(config) {
                 'metrics': 'rt:activeUsers'
               },
               function(err, result) {
-                pending--;
-                
-                var rtActiveUsers;
-                
+                pending--;                      
                 if (err) {
                   console.log(err);
                 } else {
-                  rtActiveUsers = parseInt(result.totalsForAllResults['rt:activeUsers'])
+                  data.rtActiveUsers = parseInt(result.totalsForAllResults['rt:activeUsers']);
                 }
                 analytics.data.ga.get(
                   {
@@ -70,11 +70,8 @@ module.exports = function(config) {
                     if (err) {
                       console.log(err);
                     } else {
-                      metrics.push({
-                        viewId: id,
-                        rtActiveUsers: rtActiveUsers,
-                        ga7dayUsers: parseInt(result.totalsForAllResults['ga:7dayUsers'])
-                      });
+                      data.ga7dayUsers = parseInt(result.totalsForAllResults['ga:7dayUsers']);
+                      metrics.push(data);
                     }
                     if(pending <= 0) {
                       mg.saveMetrics(metrics).then(resolve).catch(reject);
