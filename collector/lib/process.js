@@ -15,6 +15,8 @@
  */
 
 const SERVICE_ACCOUNT_EMAIL = process.env.GA_SERVICE_ACCOUNT;
+const COLLECTOR_ID =
+    process.env.COLLECTOR_ID || 'mirrorgate-google-analytics-collector';
 
 let googleapis = require('googleapis'), JWT = googleapis.auth.JWT,
     analytics = googleapis.analytics('v3');
@@ -38,11 +40,11 @@ module.exports = function(config) {
       }
 
       mg.getListOfGoogleAnaliticsIds().then((ids) => {
+        ids = ids.filter((id) => {
+          return id.startsWith('ga:');
+        });
         let pending = ids.length;
         ids.forEach((id) => {
-          let data = {
-            viewId: id
-          };
           analytics.data.realtime.get(
               {
                 auth: authClient,
@@ -54,7 +56,13 @@ module.exports = function(config) {
                 if (err) {
                   console.log(err);
                 } else {
-                  data.rtActiveUsers = parseInt(result.totalsForAllResults['rt:activeUsers']);
+                  metrics.push({
+                    viewId: id,
+                    name: 'activeUsers',
+                    value: parseInt(result.totalsForAllResults['rt:activeUsers']),
+                    timestamp: Date.now(),
+                    collectorId: COLLECTOR_ID
+                  });
                 }
                 analytics.data.ga.get(
                   {
@@ -70,8 +78,13 @@ module.exports = function(config) {
                     if (err) {
                       console.log(err);
                     } else {
-                      data.ga7dayUsers = parseInt(result.totalsForAllResults['ga:7dayUsers']);
-                      metrics.push(data);
+                      metrics.push({
+                        viewId: id,
+                        name: '7dayUsers',
+                        value: parseInt(result.totalsForAllResults['ga:7dayUsers']),
+                        timestamp: Date.now(),
+                        collectorId: COLLECTOR_ID
+                      });
                     }
                     if(pending <= 0) {
                       mg.saveMetrics(metrics).then(resolve).catch(reject);
