@@ -21,7 +21,7 @@ export GA_PEM_KEY=asduqierufasdfjuaoisfña
 
 ```
 
-Note that MirrorGate needs to have `Read & Analyze` access to get metrics from others accounts.
+Note that GA accounts have to grant `Read & Analyze` permission to MirrorGate account in order to retrieve metrics data.
 
 # Usage
 
