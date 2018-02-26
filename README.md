@@ -21,6 +21,8 @@ export GA_PEM_KEY=asduqierufasdfjuaoisfña
 
 ```
 
+Note that MirrorGate needs to have `Read & Analyze` access to get metrics from others accounts.
+
 # Usage
 
 First install dependencies
