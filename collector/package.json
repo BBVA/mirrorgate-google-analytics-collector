@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.90.0",
-    "googleapis": "^20.1.0"
+    "googleapis": "^20.1.0",
+    "nconf": "^0.10.0"
   }
 }

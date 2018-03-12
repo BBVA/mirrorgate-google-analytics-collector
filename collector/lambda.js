@@ -17,19 +17,21 @@
 /* Run as Lambda function */
 
 const main = require('./lib/process');
+const config = require('nconf');
+const path = require('path');
+
+config.argv()
+  .env()
+  .file(path.resolve(__dirname, './config/config.json'));
 
 let AWS = require('aws-sdk');
 let s3 = new AWS.S3();
-
-const BUCKET = process.env.S3_BUCKET_NAME || 'mirrorgate-secrets';
-const BUCKET_KEY = process.env.S3_BUCKET_KEY || 'google-analytics.pem';
-
 let key;
 
 function perform(callback) {
-        main({pemKey:key}).then((log) => {
-            callback(null, log);
-          }).catch(callback);
+  main({pemKey:key}).then((log) => {
+    callback(null, log);
+  }).catch(callback);
 }
 
 exports.handler = (event, context, callback) => {
@@ -37,7 +39,7 @@ exports.handler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   if(!key) {
-    s3.getObject({Bucket: BUCKET, Key: BUCKET_KEY})
+    s3.getObject({Bucket: BUCKET, Key: BUCKET_PEM_KEY})
       .promise()
       .then((data) => {
         key = data.Body.toString();

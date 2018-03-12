@@ -14,19 +14,24 @@
  *    limitations under the License.
  */
 
-const SERVICE_ACCOUNT_EMAIL = process.env.GA_SERVICE_ACCOUNT;
-const COLLECTOR_ID =
-    process.env.COLLECTOR_ID || 'mirrorgate-google-analytics-collector';
+const config = require('nconf');
+const path = require('path');
+
+config.argv()
+  .env()
+  .file(path.resolve(__dirname, '../config/config.json'));
 
 let googleapis = require('googleapis'), JWT = googleapis.auth.JWT,
     analytics = googleapis.analytics('v3');
 
 let mg = require('./mirrorgate-client');
 
-module.exports = function(config) {
+module.exports = function() {
 
   let authClient = new JWT(
-      SERVICE_ACCOUNT_EMAIL, config.pemFile, config.pemKey,
+      config.get('SERVICE_ACCOUNT_EMAIL'),
+      config.get('GA_PEM_FILE'),
+      config.get('GA_PEM_KEY'),
       ['https://www.googleapis.com/auth/analytics.readonly']);
 
   let metrics = [];
@@ -61,7 +66,7 @@ module.exports = function(config) {
                     name: 'activeUsers',
                     value: parseInt(result.totalsForAllResults['rt:activeUsers']),
                     timestamp: Date.now(),
-                    collectorId: COLLECTOR_ID
+                    collectorId: config.get('COLLECTOR_ID')
                   });
                 }
                 analytics.data.ga.get(
@@ -83,7 +88,7 @@ module.exports = function(config) {
                         name: '7dayUsers',
                         value: parseInt(result.totalsForAllResults['ga:7dayUsers']),
                         timestamp: Date.now(),
-                        collectorId: COLLECTOR_ID
+                        collectorId: config.get('COLLECTOR_ID')
                       });
                     }
                     if(pending <= 0) {

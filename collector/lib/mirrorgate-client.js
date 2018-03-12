@@ -15,21 +15,30 @@
  */
 
 const request = require('request');
+const config = require('nconf');
+const path = require('path');
 
-const MIRRORGATE_ENDPOINT =
-    process.env.MIRRORGATE_ENDPOINT || 'http://localhost:8080/mirrorgate';
+config.argv()
+  .env()
+  .file(path.resolve(__dirname, '../config/config.json'));
+
+let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
 
 module.exports = {
   getListOfGoogleAnaliticsIds: () => {
     return new Promise((resolve, reject) => {
-      request.get(
-          MIRRORGATE_ENDPOINT + '/api/user-metrics/analytic-views',
-          (err, res, body) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve(JSON.parse(body));
-          });
+      request( {
+        url: `${config.get('MIRRORGATE_ENDPOINT')}/api/user-metrics/analytic-views`,
+        headers: {
+          'content-type': 'application/json',
+          'Authorization' : `Basic ${auth}`
+        }
+      }, (err, res, body) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(JSON.parse(body));
+      });
     });
   },
 
@@ -37,20 +46,19 @@ module.exports = {
     console.log('Saving ' + JSON.stringify(metrics));
 
     return new Promise((resolve, reject) => {
-      request.post(
-          MIRRORGATE_ENDPOINT + '/api/user-metrics', {
-            headers: {
-              'content-type': 'application/json',
-            },
-
-            body: JSON.stringify(metrics)
-          },
-          (err, res, body) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve(JSON.parse(body));
-          });
+      request.post(`${config.get('MIRRORGATE_ENDPOINT')}/api/user-metrics`, {
+        headers: {
+          'content-type': 'application/json',
+          'Authorization' : `Basic ${auth}`
+        },
+        body: JSON.stringify(metrics)
+      },
+      (err, res, body) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(JSON.parse(body));
+      });
     });
   }
 };

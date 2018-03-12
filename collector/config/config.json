@@ -1,0 +1,9 @@
+{
+  "SERVICE_ACCOUNT_EMAIL": null,
+  "GA_PEM_KEY": null,
+  "GA_PEM_FILE": null,
+  "MIRRORGATE_ENDPOINT": "http://localhost:8080/mirrorgate/",
+  "MIRRORGATE_USER": null,
+  "MIRRORGATE_PASSWORD": null,
+  "COLLECTOR_ID": "mirrorgate-google-analytics-collector"
+}
