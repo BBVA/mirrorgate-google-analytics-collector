@@ -29,7 +29,7 @@ let mg = require('./mirrorgate-client');
 module.exports = function() {
 
   let authClient = new JWT(
-      config.get('SERVICE_ACCOUNT_EMAIL'),
+      config.get('GA_SERVICE_ACCOUNT'),
       config.get('GA_PEM_FILE'),
       config.get('GA_PEM_KEY'),
       ['https://www.googleapis.com/auth/analytics.readonly']);

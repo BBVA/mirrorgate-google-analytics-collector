@@ -26,7 +26,6 @@ config.argv()
 
 let AWS = require('aws-sdk');
 let s3 = new AWS.S3();
-let key;
 
 function perform(callback) {
   main({pemKey:key}).then((log) => {
@@ -38,14 +37,42 @@ exports.handler = (event, context, callback) => {
 
   context.callbackWaitsForEmptyEventLoop = false;
 
-  if(!key) {
-    s3.getObject({Bucket: BUCKET, Key: BUCKET_PEM_KEY})
-      .promise()
+  if(config.get('S3_BUCKET_NAME') && config.get('S3_BUCKET_PEM_KEY')) {
+    s3.getObject({
+      Bucket: config.get('S3_BUCKET_NAME'),
+      Key: config.get('S3_BUCKET_PEM_KEY')
+    }).promise()
       .then((data) => {
-        key = data.Body.toString();
+        config.set('GA_PEM_KEY', data.Body.toString());
+        if(config.get('S3_BUCKET_KEY')) {
+          s3.getObject({
+            Bucket: config.get('S3_BUCKET_NAME'),
+            Key: config.get('S3_BUCKET_KEY')
+          }).promise()
+            .then((data) => {
+              data = JSON.parse(data.Body);
+              config.set('MIRRORGATE_USER', data.MIRRORGATE_USER);
+              config.set('MIRRORGATE_PASSWORD', data.MIRRORGATE_PASSWORD);
+              perform(callback);
+            })
+            .catch( err => console.error(`Error: ${JSON.stringify(err)}`));
+          } else {
+            perform(callback);
+          }
+      })
+    .catch(callback);
+  } else if(config.get('S3_BUCKET_NAME') && config.get('S3_BUCKET_KEY')) {
+    s3.getObject({
+      Bucket: config.get('S3_BUCKET_NAME'),
+      Key: config.get('S3_BUCKET_KEY')
+    }).promise()
+      .then((data) => {
+        data = JSON.parse(data.Body);
+        config.set('MIRRORGATE_USER', data.MIRRORGATE_USER);
+        config.set('MIRRORGATE_PASSWORD', data.MIRRORGATE_PASSWORD);
         perform(callback);
       })
-      .catch(callback);
+      .catch( err => console.error(`Error: ${JSON.stringify(err)}`));
   } else {
     perform(callback);
   }
