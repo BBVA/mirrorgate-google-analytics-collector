@@ -22,10 +22,11 @@ config.argv()
   .env()
   .file(path.resolve(__dirname, '../config/config.json'));
 
-let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
-
 module.exports = {
   getListOfGoogleAnaliticsIds: () => {
+
+    let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+
     return new Promise((resolve, reject) => {
       request( {
         url: `${config.get('MIRRORGATE_ENDPOINT')}/api/user-metrics/analytic-views`,
@@ -37,12 +38,21 @@ module.exports = {
         if (err) {
           return reject(err);
         }
+        if(res.statusCode >= 400) {
+          return reject({
+            statusCode: res.statusCode,
+            statusMessage: res.statusMessage
+          });
+        }
         resolve(JSON.parse(body));
       });
     });
   },
 
   saveMetrics: (metrics) => {
+
+    let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+
     console.log('Saving ' + JSON.stringify(metrics));
 
     return new Promise((resolve, reject) => {
@@ -56,6 +66,12 @@ module.exports = {
       (err, res, body) => {
         if (err) {
           return reject(err);
+        }
+        if(res.statusCode >= 400) {
+          return reject({
+            statusCode: res.statusCode,
+            statusMessage: res.statusMessage
+          });
         }
         resolve(JSON.parse(body));
       });

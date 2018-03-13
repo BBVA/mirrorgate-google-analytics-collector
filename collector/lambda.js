@@ -28,7 +28,7 @@ let AWS = require('aws-sdk');
 let s3 = new AWS.S3();
 
 function perform(callback) {
-  main({pemKey:key}).then((log) => {
+  main().then((log) => {
     callback(null, log);
   }).catch(callback);
 }
@@ -60,7 +60,7 @@ exports.handler = (event, context, callback) => {
             perform(callback);
           }
       })
-    .catch(callback);
+      .catch(callback);
   } else if(config.get('S3_BUCKET_NAME') && config.get('S3_BUCKET_KEY')) {
     s3.getObject({
       Bucket: config.get('S3_BUCKET_NAME'),
