@@ -17,7 +17,7 @@ export MIRRORGATE_ENDPOINT=http://localhost:8080/mirrorgate
 export GA_PEM_FILE=./my.pem
 
 # Google Analytics service account pem key password
-export GA_PEM_KEY=asduqierufasdfjuaoisfña
+export GA_PEM_KEY=xxxxxxxxxx
 
 ```
 
@@ -35,7 +35,7 @@ First install dependencies
 Then run `local.js` with npm
 
 ```sh
-  nmp run index
+  nmp start
 ```
 
 ## Running in Amazon Lambda
