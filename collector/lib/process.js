@@ -58,7 +58,7 @@ module.exports = function() {
               },
               function(err, result) {
                 if (err) {
-                  console.log(err);
+                  console.log(`Error getting metric rt:activeUsers from GA account ${id}: ${err}`);
                 } else {
                   metrics.push({
                     viewId: id,
@@ -80,7 +80,7 @@ module.exports = function() {
                   function(err, result) {
                     pending--;
                     if (err) {
-                      console.log(err);
+                      console.log(`Error getting metric ga:7dayUsers from GA account ${id}: ${err}`);
                     } else {
                       metrics.push({
                         viewId: id,
