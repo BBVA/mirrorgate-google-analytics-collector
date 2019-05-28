@@ -2,15 +2,14 @@
 
 ![MirrorGate](./media/images/logo-ae.png)
 
-
 This Node application connects to Google Analytics and collects analytics information for MirrorGate.
 
-# Configuring
+## Configuring
 
 You need to set the following environment variables:
 
 ```sh
-# Mirrorgate endpoint url
+# MirrorGate endpoint url
 export MIRRORGATE_ENDPOINT=http://localhost:8080/mirrorgate
 
 # Google Analytics service account pem key file url
@@ -23,7 +22,7 @@ export GA_PEM_KEY=xxxxxxxxxx
 
 Note that GA accounts have to grant `Read & Analyze` permission to MirrorGate account in order to retrieve metrics data.
 
-# Usage
+## Usage
 
 First install dependencies
 
@@ -46,12 +45,13 @@ First package script zip with the following gulp task
 npm i
 ./node_modules/gulp/bin/gulp.js package
 ```
+
 or with npm
 
 ```sh
 npm run package
 ```
 
-Create a lambda with runtime Node.js 6.10 or grater and folowing handler `lambda.handler`. Note it will execute only once, so you will have to use a timed trigger to execute it eventually.
+Create a lambda with runtime Node.js 6.10 or grater and following handler `lambda.handler`. Note it will execute only once, so you will have to use a timed trigger to execute it eventually.
 
 You can provide the environment variable `S3_BUCKET_NAME` to identify and S3 bucket to download the pem key from, and `S3_BUCKET_KEY` for the name of the pem file.

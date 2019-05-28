@@ -23,7 +23,7 @@ config.argv()
   .file(path.resolve(__dirname, '../config/config.json'));
 
 module.exports = {
-  getListOfGoogleAnaliticsIds: () => {
+  getListOfGoogleAnalyticsIds: () => {
 
     let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
 

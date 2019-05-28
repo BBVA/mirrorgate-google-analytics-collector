@@ -44,7 +44,7 @@ module.exports = function() {
         return;
       }
 
-      mg.getListOfGoogleAnaliticsIds().then((ids) => {
+      mg.getListOfGoogleAnalyticsIds().then((ids) => {
         ids = ids.filter((id) => {
           return id.startsWith('ga:');
         });
@@ -57,7 +57,6 @@ module.exports = function() {
                 'metrics': 'rt:activeUsers'
               },
               function(err, result) {
-                pending--;
                 if (err) {
                   console.log(err);
                 } else {
@@ -79,7 +78,7 @@ module.exports = function() {
                     'dimensions': 'ga:date'
                   },
                   function(err, result) {
-
+                    pending--;
                     if (err) {
                       console.log(err);
                     } else {
