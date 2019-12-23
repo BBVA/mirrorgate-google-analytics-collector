@@ -25,7 +25,7 @@ config.argv()
 module.exports = {
   getListOfGoogleAnalyticsIds: () => {
 
-    let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+    let auth = Buffer.from(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
 
     return new Promise((resolve, reject) => {
       request( {
@@ -51,7 +51,7 @@ module.exports = {
 
   saveMetrics: (metrics) => {
 
-    let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+    let auth = Buffer.from(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
 
     console.log('Saving ' + JSON.stringify(metrics));
 

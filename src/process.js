@@ -21,8 +21,9 @@ config.argv()
   .env()
   .file(path.resolve(__dirname, '../config/config.json'));
 
-let googleapis = require('googleapis'), JWT = googleapis.auth.JWT,
-    analytics = googleapis.analytics('v3');
+let {google} = require('googleapis');
+let JWT = google.auth.JWT;
+let analytics = google.analytics('v3');
 
 let mg = require('./mirrorgate-client');
 
@@ -63,7 +64,7 @@ module.exports = function() {
                   metrics.push({
                     viewId: id,
                     name: 'activeUsers',
-                    value: parseInt(result.totalsForAllResults['rt:activeUsers']),
+                    value: parseInt(result.data.totalsForAllResults['rt:activeUsers']),
                     timestamp: Date.now(),
                     collectorId: config.get('COLLECTOR_ID')
                   });
@@ -85,7 +86,7 @@ module.exports = function() {
                       metrics.push({
                         viewId: id,
                         name: '7dayUsers',
-                        value: parseInt(result.totalsForAllResults['ga:7dayUsers']),
+                        value: parseInt(result.data.totalsForAllResults['ga:7dayUsers']),
                         timestamp: Date.now(),
                         collectorId: config.get('COLLECTOR_ID')
                       });

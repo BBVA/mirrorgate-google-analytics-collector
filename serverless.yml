@@ -1,0 +1,28 @@
+service: mirrorgate-google-analytics-collector
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+package:
+  individually: true
+    - src/**
+    - config/**
+    - index.js
+    - lambda.js
+  exclude:
+    - media/**
+    - .gitignore
+    - .editorconfig
+    - .jshintrc
+    - ./**.md
+    - ./**.json
+    - ./**.yml
+    - LICENSE
+    - Jenkinsfile
+    - .vscode/**
+    - ./**/*.pem
+
+functions:
+  mirrorgate-google-analytics-collector:
+    handler: lambda.handler

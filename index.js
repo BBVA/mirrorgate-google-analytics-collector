@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-const main = require('./lib/process');
+const main = require('./src/process');
 
 main()
   .then(result => console.log(result))

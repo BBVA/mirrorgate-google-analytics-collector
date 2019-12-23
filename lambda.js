@@ -16,7 +16,7 @@
 
 /* Run as Lambda function */
 
-const main = require('./lib/process');
+const main = require('./src/process');
 const config = require('nconf');
 const path = require('path');
 

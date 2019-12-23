@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  install:
+      image: "node:12"
+      volumes:
+        - .:/tmp/repo
+      working_dir: "/tmp/repo"
+      command: "npm install"
+  package:
+      image: "node:12"
+      volumes:
+        - .:/tmp/repo
+      working_dir: "/tmp/repo"
+      command: "npm run package"

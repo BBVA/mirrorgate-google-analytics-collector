@@ -2,26 +2,32 @@
 
 node ('global') {
 
-    stage('Checkout') {
-        checkout(scm)
-    }
+    try {
 
-    stage('Build') {
+        stage('Checkout') {
+            checkout(scm)
+        }
+
+        stage('Build') {
+            sh """
+                docker-compose -p \${BUILD_TAG} run -u \$(id -u) install
+            """
+        }
+
+        stage('Package Zip') {
+            sh """
+                docker-compose -p \${BUILD_TAG} run -u \$(id -u) package
+            """
+        }
+
+        stage('Publish on Jenkins') {
+            step([$class: "ArtifactArchiver", artifacts: ".serverless/*.zip", fingerprint: true])
+        }
+
+    } finally {
         sh """
-            npm install
-            cd collector
-            npm install --production
+            docker-compose -p \${BUILD_TAG} down --volumes
         """
-    }
-
-    stage('Package Zip') {
-        sh """
-            npm run package
-        """
-    }
-
-    stage('Publish on Jenkins') {
-        step([$class: "ArtifactArchiver", artifacts: "build/*.zip", fingerprint: true])
     }
 
 }

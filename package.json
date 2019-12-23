@@ -1,10 +1,11 @@
 {
   "name": "mirrorgate-google-analytics-collector-build",
   "version": "1.0.0",
-  "description": "",
+  "description": "MirrorGate collector for Google Analytics",
+  "main": "index.js",
   "scripts": {
-    "package": "./node_modules/.bin/gulp package",
-    "start": "node ./collector/index.js",
+    "package": "serverless package",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "BBVA",
@@ -14,7 +15,12 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-zip": "^4.2.0"
+    "serverless": "1.60.1"
+  },
+  "dependencies": {
+    "aws-sdk": "2.595.0",
+    "googleapis": "46.0.0",
+    "nconf": "0.10.0",
+    "request": "2.88.0"
   }
 }
